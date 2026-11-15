@@ -1,0 +1,27 @@
+# Code projects: each one is its own git repository (ADR 0004).
+backend/
+android/
+ios/
+web/
+
+# Store credentials (upload keystore, passwords, service accounts): never in git.
+secrets/
+*.jks
+*.keystore
+google-services.json
+GoogleService-Info.plist
+
+# Environment files with real values.
+.env
+.env.*
+!.env.example
+
+# Claude Code workflow state (TDD phase, edit records) and local settings.
+.claude/state/
+.claude/settings.local.json
+
+# Browser automation output (screenshots, cookies of agent sessions).
+.playwright-mcp/
+
+__pycache__/
+.DS_Store

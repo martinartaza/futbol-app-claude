@@ -1,0 +1,76 @@
+{
+  "$schema": "https://json.schemastore.org/claude-code-settings.json",
+  "permissions": {
+    "allow": [
+      "Bash(python3 scripts/check_comments.py:*)",
+      "Bash(python3 scripts/check_language.py:*)",
+      "Bash(python3 scripts/check_markdown.py:*)",
+      "Bash(python3 scripts/check_explication.py:*)",
+      "Bash(python3 scripts/explication_scope.py:*)",
+      "Bash(python3 scripts/tdd.py start:*)",
+      "Bash(python3 scripts/tdd.py status:*)",
+      "Bash(python3 scripts/tdd.py done:*)",
+      "Bash(uv run pytest:*)",
+      "Bash(uv run ruff:*)",
+      "Bash(uv run mypy:*)",
+      "Bash(uv run lint-imports:*)",
+      "Bash(docker compose ps:*)",
+      "Bash(docker compose logs:*)",
+      "Bash(docker compose exec backend alembic revision:*)",
+      "Bash(git status:*)",
+      "Bash(git diff:*)",
+      "Bash(git log:*)"
+    ],
+    "ask": ["Bash(git commit:*)", "Bash(git push:*)"],
+    "deny": ["Read(secrets/**)", "Read(**/*.jks)", "Read(**/*.keystore)"]
+  },
+  "hooks": {
+    "PreToolUse": [
+      {
+        "matcher": "Write|Edit|MultiEdit",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "python3 \"$CLAUDE_PROJECT_DIR/.claude/hooks/guard_edit.py\"",
+            "timeout": 10
+          }
+        ]
+      },
+      {
+        "matcher": "Bash",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "python3 \"$CLAUDE_PROJECT_DIR/.claude/hooks/guard_bash.py\"",
+            "timeout": 10
+          }
+        ]
+      }
+    ],
+    "PostToolUse": [
+      {
+        "matcher": "Write|Edit|MultiEdit",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "python3 \"$CLAUDE_PROJECT_DIR/.claude/hooks/post_edit.py\"",
+            "timeout": 90,
+            "statusMessage": "Formatting and checking project rules"
+          }
+        ]
+      }
+    ],
+    "Stop": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "python3 \"$CLAUDE_PROJECT_DIR/.claude/hooks/stop_checks.py\"",
+            "timeout": 900,
+            "statusMessage": "Running checks and tests of touched projects"
+          }
+        ]
+      }
+    ]
+  }
+}

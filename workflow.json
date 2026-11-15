@@ -1,0 +1,79 @@
+{
+  "projects": {
+    "backend": {
+      "path": "backend",
+      "label": "backend",
+      "section": "Backend",
+      "requires": ".venv",
+      "source": ["app/**/*.py", "pyproject.toml", "alembic.ini", "alembic/env.py"],
+      "tests": ["tests/**/*.py"],
+      "runnable_tests": ["test_*.py"],
+      "test_command": [".venv/bin/pytest", "-q"],
+      "no_tests_exit_codes": [5],
+      "checks": [
+        {"name": "ruff", "command": [".venv/bin/ruff", "check", "."]},
+        {"name": "mypy", "command": [".venv/bin/mypy"]},
+        {"name": "import-linter", "command": [".venv/bin/lint-imports"]}
+      ],
+      "on_edit": [
+        {
+          "extensions": [".py"],
+          "fix": [
+            [".venv/bin/ruff", "format", "--quiet", "{file}"],
+            [".venv/bin/ruff", "check", "--fix", "--quiet", "{file}"]
+          ],
+          "check": [[".venv/bin/ruff", "check", "--quiet", "{file}"]]
+        }
+      ],
+      "generated": [
+        {
+          "glob": "alembic/versions/*.py",
+          "generator": "alembic revision",
+          "how": "Generate it with `docker compose exec backend alembic revision --autogenerate -m \"short_description\"` from backend/ (skill `migrations`)."
+        },
+        {
+          "glob": "schema.graphql",
+          "generator": "strawberry export-schema",
+          "how": "Export it with `uv run strawberry export-schema app.api.schema:schema --output schema.graphql` from backend/ (ADR 0003 section 3).",
+          "edit": "deny"
+        },
+        {
+          "glob": "admin_schema.graphql",
+          "generator": "strawberry export-schema",
+          "how": "Export it with `uv run strawberry export-schema app.api.admin_schema:schema --output admin_schema.graphql` from backend/ (ADR 0007 section 3).",
+          "edit": "deny"
+        },
+        {
+          "glob": "uv.lock",
+          "generator": "uv lock",
+          "how": "Change dependencies with `uv add <package>` or `uv remove <package>` from backend/; uv rewrites the lock file.",
+          "edit": "deny"
+        }
+      ]
+    },
+    "workspace": {
+      "path": ".",
+      "label": "workspace",
+      "section": "Workspace",
+      "source": ["scripts/*.py", ".claude/hooks/*.py"],
+      "tests": ["tests/**/*.py"],
+      "runnable_tests": ["test_*.py"],
+      "test_command": ["uvx", "--python", "3.13", "pytest==9.2.0", "-q", "tests"],
+      "no_tests_exit_codes": [5],
+      "checks": [
+        {
+          "name": "ruff",
+          "command": ["uvx", "ruff==0.17.5", "check", "scripts", ".claude/hooks", "tests"]
+        }
+      ],
+      "on_edit": [
+        {
+          "extensions": [".py"],
+          "fix": [["uvx", "ruff==0.17.5", "format", "--quiet", "{file}"]],
+          "check": [["uvx", "ruff==0.17.5", "check", "--quiet", "{file}"]]
+        }
+      ],
+      "explication": false
+    }
+  }
+}
