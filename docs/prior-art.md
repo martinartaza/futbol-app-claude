@@ -186,6 +186,20 @@ theme editor's check (ADR 0008). Reference: W3C Web Content Accessibility Guidel
 state; view models call repositories. Used: skill `app-architecture` (Android, and the
 same shape on iOS). Reference: Google, "Guide to app architecture" for Android.
 
+**Project file generated from a specification.** The Xcode project is described in a
+short YAML file and generated, so it is never edited by hand nor merged in git. Used:
+`ios/project.yml` (requirement 0006). Reference: XcodeGen (Yonas Kolb,
+github.com/yonaskolb/XcodeGen); Tuist.
+
+**Lint rules on the syntax tree.** A rule walks the parsed source instead of matching
+text, so it knows whether a comment sits inside a function body. Used: `ios/LintRules`
+(requirement 0006), detekt rules on Android. Reference: SwiftSyntax (Apple,
+github.com/swiftlang/swift-syntax); ESLint's rule model on ESTree.
+
+**Launch-time test configuration.** UI tests start the app with an environment variable
+that selects a fixed answer instead of the network. Used: `BACKEND_STUB` in the iOS UI
+tests (requirement 0006). Reference: Apple, XCTest `XCUIApplication.launchEnvironment`.
+
 ## Process
 
 **Test-driven development.** A failing test first, then the code that makes it pass.
@@ -215,6 +229,18 @@ Used: per ticket only its new tests; the full suite at each epic's closing ticke
 checks find before a release. Used: the closing ticket of each epic, with regressions
 fixed as bugs and review findings as refactors. Reference: Scaled Agile Framework,
 Innovation and Planning iteration.
+
+**Compose file per environment (base plus overrides).** One base Compose file with
+what every environment runs, and one small file per environment with only its
+differences. Used: `backend/docker-compose.yml`, `compose.override.yml` (local),
+`compose.staging.yml` (server), ADR 0004 section 7. Reference: Docker documentation,
+"Use multiple Compose files".
+
+**The Twelve-Factor App (config in the environment, dev/prod parity).** Configuration
+that changes between deploys lives in the environment, and the environments stay as
+alike as possible. Used: host names only in each `.env`, the same images and migrations
+locally and on staging (ADR 0004 section 7). Reference: Adam Wiggins, The Twelve-Factor
+App (12factor.net, 2011).
 
 **Design patterns as named, discovered solutions.** Patterns name solutions that
 practitioners kept finding independently. Reference: Gamma, Helm, Johnson and

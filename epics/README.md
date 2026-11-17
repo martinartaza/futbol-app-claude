@@ -50,7 +50,7 @@ backoffice section.
 
 | Id | Epic | Status | Origin |
 |---|---|---|---|
-| [E01](E01-skeleton.md) | Skeleton of the four projects | in progress (`v0.1`) | Bootstrap |
+| [E01](E01-skeleton.md) | Skeleton of the four projects | done (`v0.1`) | Bootstrap |
 | [E02](E02-backoffice.md) | Backoffice and app configuration | defining | Bootstrap |
 | [E03](E03-dynamic-themes.md) | Dynamic themes | defining | Bootstrap |
 | [E04](E04-accounts-and-profile.md) | Accounts, social login and profile | defining | Bootstrap |

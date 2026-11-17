@@ -1,11 +1,11 @@
 ---
 id: E01
 title: Skeleton of the four projects
-status: in progress
+status: done
 version: v0.1
 origin: Bootstrap session, 2026-11-03
 adrs: ["0001", "0003", "0004", "0006"]
-requirements: ["0001", "0002"]
+requirements: ["0001", "0002", "0003", "0004", "0005", "0006", "0007", "0008", "0009"]
 depends_on: []
 ---
 
@@ -42,11 +42,17 @@ the architecture contracts are checked by tools from the first line of code.
   and a `versionCode` above 7 (`CLAUDE.md`, "Store identity").
 - `workflow.json` gets the entries of the three clients; `docs/agent/codebase-map.md`
   and `docs/agent/bug-reproduction.md` are filled as the skeleton appears.
-- Local stack behind the local Traefik.
+- Local stack behind the local Traefik; the backend runs as staging on the developer's
+  Hetzner server behind its shared Traefik, deployed by hand with a script, and the
+  mobile apps and the web on Vercel use it (requirement 0008). After 0008 a short
+  closing ticket runs the full suite and the review on the changes since `v0.1.7`.
+- Store bundles are built locally by the developer and uploaded to a test track;
+  building and publishing from CI is a row of `docs/production-readiness.md`
+  ("Releases").
 
 ## Open questions
 
-- Release pipeline: who builds the store bundle and where (local or CI).
+- None.
 
 ## Impact on the architecture
 

@@ -56,15 +56,19 @@ if and only if its change was committed.
 
 Each consumer has a name, the event types it handles and its own queue semantics:
 
-- its own position in the event stream, so a slow or failing consumer never blocks
-  the others;
+- its own queue of deliveries, so a slow or failing consumer never blocks the others,
+  and a failing event never blocks the next ones;
 - retries with exponential backoff;
 - a dead-letter state after a fixed number of attempts, kept for inspection.
 
 The `EventBus` port delivers outbox events to the consumers. Its first adapter runs in
-PostgreSQL: a relay reads the outbox with `FOR UPDATE SKIP LOCKED`, woken by `NOTIFY`,
-and keeps each consumer's position, attempts and dead letters in tables of
-`app/events`. *Why*: the topic-and-queues pattern without new infrastructure.
+PostgreSQL: a relay takes the outbox rows not yet relayed (`relayed_at` empty) with
+`FOR UPDATE SKIP LOCKED`, woken by `NOTIFY` and by a periodic poll, creates one delivery
+per consumer of the event type and marks the row relayed; deliveries keep their
+attempts and dead letters in tables of `app/events`. Rows are taken by that mark, never
+by a position, so an event whose transaction commits late is still relayed, and no
+process waits for a row another one holds. *Why*: the topic-and-queues pattern without
+new infrastructure, and no event lost to commit order.
 
 ### 4. Rules that keep the transport replaceable
 
@@ -75,13 +79,14 @@ from its queue. Modules and consumers do not change, because:
 - events are plain JSON (section 1);
 - consumers are **idempotent**: each one records the event ids it processed, so a
   repeated delivery has no effect;
-- consumers rely on order only **within one `aggregate_key`** (the message group of a
-  FIFO queue, the routing key of an exchange), never on a global order;
+- consumers **never rely on delivery order**: a consumer that cares compares the
+  aggregate's version (or `occurred_at`) and ignores an older event; `aggregate_key`
+  identifies the aggregate, it does not order deliveries;
 - a consumer never shares a transaction with the producer;
 - the same contract tests run against every `EventBus` adapter.
 
-*Why*: these are exactly the guarantees managed queues give (at-least-once delivery,
-order per group), so code written for the first adapter is valid for the next.
+*Why*: these are exactly the guarantees a standard managed queue gives (at-least-once
+delivery, no order), so code written for the first adapter is valid for the next.
 
 ### 5. The worker process
 
@@ -123,7 +128,7 @@ adapter covers both platforms.
   code lives in the consuming module (`notifications`, `feed`).
 - `architecture-reviewer`: a module calling another module's consumer directly; an
   event carrying a database object; a consumer that is not idempotent or depends on
-  global order; a client keeping state that only arrived through a socket.
+  delivery order; a client keeping state that only arrived through a socket.
 
 ## Consequences
 

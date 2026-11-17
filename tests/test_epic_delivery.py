@@ -204,6 +204,22 @@ def test_complete_epic_explication_passes(workspace: Path) -> None:
     assert code == 0, errors
 
 
+def test_a_reopened_epic_is_checked_up_to_its_last_closing_ticket(workspace: Path) -> None:
+    """An epic closed twice (a ticket added after its first closing ticket) is checked
+    against the scope of its last closing ticket."""
+    closed_epic(workspace)
+    (workspace / "backend" / "app" / "extra.py").write_text("VALUE = 1\n")
+    (workspace / "requirements" / "0003-close-e01-again.md").write_text(
+        "---\nid: '0003'\nkind: epic-close\nepic: E01\ntag: v0.1.10\nprojects: [backend]\n---\n"
+    )
+    git(workspace, "add", "-A")
+    git(workspace, "commit", "-qm", "second closing ticket")
+    git(workspace, "tag", "v0.1.10")
+    code, errors = check(workspace, explication(workspace, ["app/calc.py", "tests/test_calc.py"]))
+    assert code == 2
+    assert "app/extra.py" in errors
+
+
 def test_epic_explication_needs_a_closing_ticket(workspace: Path) -> None:
     """Without the epic's closing ticket there is no scope to check against."""
     closed_epic(workspace)

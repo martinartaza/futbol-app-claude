@@ -53,8 +53,22 @@ CODE_SPAN = re.compile(r"`([^`]+)`")
 PLACEHOLDER = re.compile(r"\b(?:NNNN|EXX)\b")
 
 
+def version(tag: str) -> tuple[int, ...]:
+    """A `v0.E.T` tag as numbers, so `v0.1.10` sorts after `v0.1.9`.
+
+    Args:
+        tag: the tag.
+
+    Returns:
+        Its numbers, for example `(0, 1, 10)`.
+    """
+    return tuple(int(part) for part in tag.removeprefix("v").split("."))
+
+
 def checked_tag(path: Path) -> str | None:
-    """The tag whose scope an epic explication must cover: its closing ticket's tag.
+    """The tag whose scope an epic explication must cover: its last closing ticket's tag.
+
+    An epic reopened after a closing ticket has a second one, with a later tag.
 
     Args:
         path: the explication file.
@@ -72,12 +86,15 @@ def checked_tag(path: Path) -> str | None:
     if not match:
         return None
     epic = match[1]
+    tags = []
     for requirement in sorted((ROOT / "requirements").glob("*.md")):
         text = requirement.read_text(encoding="utf-8")
         field = EPIC_FIELD.search(text)
         tag = TAG_FIELD.search(text)
         if CLOSING_KIND.search(text) and field and field[1] == epic and tag:
-            return tag[1]
+            tags.append(tag[1])
+    if tags:
+        return max(tags, key=version)
     raise ScopeError(
         f"la épica {epic} no tiene ticket de cierre (kind: epic-close) con tag: cerrá la "
         "épica antes de escribir su explicación"

@@ -63,14 +63,11 @@ Ticket: [`requirements/0001-backend-skeleton.md`](../../requirements/0001-backen
   (`https://$BACKEND_HOST`); AC-3, AC-5, AC-6 con la aplicación en proceso (httpx
   `ASGITransport`) y `APP_ENV=staging`; AC-7 con `breaking_changes` sobre un schema con
   un campo de más; AC-8 con una copia del código donde `health.service` importa el
-  repositorio de `app_config`. AC-10 queda para el primer push al remoto.
+  repositorio de `app_config`.
 - El usuario probó a mano `/graphql` (GraphiQL) y `/health` por HTTPS y dio el ticket
-  por terminado el 2026-11-15. AC-10 se verifica en el primer push al remoto.
-- A raíz de este ticket (unos 41 permisos, uno por archivo, por trabajar sin tarea
-  abierta) se agregó `tdd.py start <tarea> --direct`: un solo permiso para todo un
-  cambio directo, con fuente y tests libres hasta `done`.
-- El usuario probó a mano `/graphql` (GraphiQL) y `/health` por HTTPS y dio el ticket
-  por terminado el 2026-11-15. AC-10 se verifica en el primer push al remoto.
+  por terminado el 2026-11-15. AC-10 se verificó con el primer push: `checks.yml` en
+  verde en GitHub Actions (para `main` y para el tag `v0.1.1`). Los cuatro repos de
+  código tienen su remoto en GitHub y el tag `v0.1.1`.
 - A raíz de este ticket (unos 41 permisos, uno por archivo, por trabajar sin tarea
   abierta) se agregó `tdd.py start <tarea> --direct`: un solo permiso para todo un
   cambio directo, con fuente y tests libres hasta `done`.

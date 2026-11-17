@@ -86,7 +86,9 @@ Stack-specific items (ADR 0004, skills `app-architecture`, `theming`,
     stored value outside `core` preferences or a token outside secure storage; a
     request without platform and `versionCode`; a copied component instead of a
     parameter; a component name that differs from the same component in another
-    client.
+    client; a client project in `workflow.json` without the `reuse_guard` globs that
+    skill `reuse-components` lists for it, or a rule a skill says is enforced by a
+    tool (detekt, ESLint, Konsist, SwiftLint, `ios/LintRules`, a hook) that is not configured.
 16. **Android**: logic in a composable instead of its `ViewModel`; a view model that
     calls Apollo directly instead of the feature repository; storage outside `core`.
 17. **iOS**: logic in a `View` instead of its view model; a feature target depending on
@@ -100,7 +102,7 @@ Stack-specific items (ADR 0004, skills `app-architecture`, `theming`,
     login reachable outside `local`.
 20. **Events (ADR 0006)**: a module calling another module's consumer directly; an
     event carrying a database object; a consumer that is not idempotent, depends on
-    global order or shares the producer's transaction; state that only lives in a
+    delivery order or shares the producer's transaction; state that only lives in a
     socket; push sent outside `PushSender`.
 21. **Backoffice (ADR 0007)**: a backoffice action through a repository or model instead
     of the service; a service without an `Actor` where it changes state; a secret in the

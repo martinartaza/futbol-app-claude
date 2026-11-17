@@ -46,6 +46,11 @@ states.
 
 - The backoffice ADR (0007): API surface for admin operations, the web routing of the
   secret path, the settings store shape.
+- Settings cache across processes: `app_config` caches per process and only the
+  writing process clears it, so a backoffice change reaches one API process (a TTL, or
+  a reload on an outbox event). From the E01 review (0007 F-12).
+- `app_config.set()` takes `ChangedBy`; it moves to the `Actor` of ADR 0007 when this
+  epic introduces it. From the E01 review (0007 F-13).
 
 ## Impact on the architecture
 

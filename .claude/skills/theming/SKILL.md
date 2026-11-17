@@ -77,7 +77,7 @@ never from the code.
 ## Enforcement
 
 A lint rule per client fails on literals outside the generated theme, written with each
-skeleton: a detekt rule (android), SwiftLint custom rules (ios), ESLint and Stylelint
+skeleton: a detekt rule (android), the `ios/LintRules` rule `no-literal-design-values` (ios), ESLint and Stylelint
 rules (web). `sync_contracts.py` checks the contract; backend tests reject seasonal
 themes with unknown tokens, wrong types or failing contrast; the
 `architecture-reviewer` checks item 22.

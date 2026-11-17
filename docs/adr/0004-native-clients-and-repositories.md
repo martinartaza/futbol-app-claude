@@ -124,18 +124,37 @@ Work is delivered by epic, and versions follow it: `v0.E.T`.
 *Why*: per-ticket runs stay fast as the suite grows, the full suite and the
 architecture review see the epic's design as a whole, once, and the explication tells
 how the epic's new piece was built instead of repeating each ticket's diff.
-### 7. Local development
+### 7. Environments: local and staging
 
-Android on the Android Emulator, iOS on the iOS Simulator (its iOS runtime installed
-from Xcode Settings, Components), web and backend behind the local Traefik.
+- **Local**: backend and web behind the local Traefik, with the local certificate.
+  Android on the Android Emulator, iOS on the iOS Simulator (its iOS runtime installed
+  from Xcode Settings, Components).
+- **Staging**: the backend on the developer's server behind its shared Traefik, with a
+  publicly trusted certificate. The mobile apps in development (emulator, Simulator and
+  phones) use it, and so does the web once it is deployed.
+- **One Compose file per environment**: `docker-compose.yml` holds what every
+  environment runs, `compose.override.yml` what only local adds (source mount, reload,
+  test database; Compose loads it by itself) and `compose.staging.yml` what only the
+  server adds (certificate resolver, restart policy; chosen with `COMPOSE_FILE` in the
+  server's `.env`). Host names live only in each environment's `.env`.
+- **Migrations on start**: a one-shot `migrate` service runs `alembic upgrade head`;
+  the API and the worker start after it completes.
+- **Deploy**: `backend/tools/deploy.sh <ref>` on the server checks out a tag or branch,
+  rebuilds, restarts and checks `/health` over HTTPS. Deploying from CI is the
+  "Releases" row of `docs/production-readiness.md`.
+
+*Why*: the apps on phones need a backend with a trusted certificate that does not
+depend on the developer's machine; one base file keeps local and staging alike, and
+each environment adds only its differences (requirement 0008).
 
 ### 8. How it is enforced
 
 - `workflow.json`: one project per client with its source, tests, test command, checks,
   format and lint on edit, and its generated files (Apollo types, `schema.graphql`,
   design tokens) with `"edit": "deny"`.
-- The comment rule in each language: detekt (Kotlin), SwiftLint (Swift) and ESLint
-  (TypeScript), each with a rule against comments inside function bodies.
+- The comment rule in each language: detekt (Kotlin), `ios/LintRules` (Swift, built on
+  SwiftSyntax next to SwiftLint) and ESLint (TypeScript), each with a rule against
+  comments inside function bodies.
 - A lint rule per client that fails on literal colours, fonts, sizes or radii (skill
   `theming`).
 - Skills `app-architecture`, `theming` and `reuse-components`, one section per
@@ -185,3 +204,11 @@ Bad:
   explanation, the file list as reference.
 - Cyrille Martraire, *Living Documentation* (2019), and the engineering notebook
   practice: ticket notes written while the work happens.
+- XcodeGen (Yonas Kolb, github.com/yonaskolb/XcodeGen): the iOS project generated from
+  `ios/project.yml`.
+- SwiftSyntax (Apple, github.com/swiftlang/swift-syntax): the iOS lint rules of
+  `ios/LintRules` walk the syntax tree.
+- Docker documentation, "Merge Compose files" / "Use multiple Compose files": the base
+  file with an override per environment (section 7).
+- Adam Wiggins, The Twelve-Factor App (12factor.net, 2011), factors III "Config" and X
+  "Dev/prod parity": configuration in the environment, local and staging alike.

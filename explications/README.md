@@ -53,8 +53,9 @@ Repite el código y cuesta tokens, así que depende de la tarea:
 
 ```mermaid
 flowchart LR
-    E01[E01 ...]
+    E01[E01 Esqueleto de los cuatro proyectos]
 ```
 
 | Épica | Explicación | Versión | En una línea |
 |---|---|---|---|
+| E01 | [`E01-skeleton.md`](E01-skeleton.md) | `v0.1` | Backend, eventos, contratos compartidos, los tres clientes y staging, andando de punta a punta. |

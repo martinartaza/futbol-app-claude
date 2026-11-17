@@ -1,0 +1,149 @@
+{
+  "$description": "Design token contract (ADR 0008): primitives, semantic roles, component tokens. Every token has a white and a dark value in $extensions.modes; backgrounds name their foreground in $extensions.pair. Generated into each client by scripts/sync_contracts.py.",
+  "color": {
+    "red": {
+      "300": { "$type": "color", "$extensions": { "modes": { "white": "#F08A82", "dark": "#F08A82" } } },
+      "500": { "$type": "color", "$description": "Logo red.", "$extensions": { "modes": { "white": "#D63B32", "dark": "#D63B32" } } },
+      "600": { "$type": "color", "$extensions": { "modes": { "white": "#C62F27", "dark": "#C62F27" } } }
+    },
+    "blue": {
+      "300": { "$type": "color", "$extensions": { "modes": { "white": "#7DB8F0", "dark": "#7DB8F0" } } },
+      "500": { "$type": "color", "$description": "Logo blue.", "$extensions": { "modes": { "white": "#3C8DDB", "dark": "#3C8DDB" } } },
+      "700": { "$type": "color", "$extensions": { "modes": { "white": "#1F6FBF", "dark": "#1F6FBF" } } }
+    },
+    "green": {
+      "300": { "$type": "color", "$extensions": { "modes": { "white": "#8BCF6A", "dark": "#8BCF6A" } } },
+      "500": { "$type": "color", "$description": "Logo pitch green.", "$extensions": { "modes": { "white": "#5FA83A", "dark": "#5FA83A" } } },
+      "700": { "$type": "color", "$extensions": { "modes": { "white": "#2E7D32", "dark": "#2E7D32" } } }
+    },
+    "neutral": {
+      "0": { "$type": "color", "$extensions": { "modes": { "white": "#FFFFFF", "dark": "#FFFFFF" } } },
+      "50": { "$type": "color", "$extensions": { "modes": { "white": "#F3F6F4", "dark": "#F3F6F4" } } },
+      "100": { "$type": "color", "$extensions": { "modes": { "white": "#E8EDE9", "dark": "#E8EDE9" } } },
+      "850": { "$type": "color", "$extensions": { "modes": { "white": "#1B211D", "dark": "#1B211D" } } },
+      "900": { "$type": "color", "$extensions": { "modes": { "white": "#1B1F1C", "dark": "#1B1F1C" } } },
+      "950": { "$type": "color", "$extensions": { "modes": { "white": "#121614", "dark": "#121614" } } }
+    }
+  },
+  "space": {
+    "1": { "$type": "dimension", "$extensions": { "modes": { "white": "4px", "dark": "4px" } } },
+    "2": { "$type": "dimension", "$extensions": { "modes": { "white": "8px", "dark": "8px" } } },
+    "3": { "$type": "dimension", "$extensions": { "modes": { "white": "12px", "dark": "12px" } } },
+    "4": { "$type": "dimension", "$extensions": { "modes": { "white": "16px", "dark": "16px" } } },
+    "5": { "$type": "dimension", "$extensions": { "modes": { "white": "24px", "dark": "24px" } } },
+    "6": { "$type": "dimension", "$extensions": { "modes": { "white": "32px", "dark": "32px" } } }
+  },
+  "radius": {
+    "sm": { "$type": "dimension", "$extensions": { "modes": { "white": "4px", "dark": "4px" } } },
+    "md": { "$type": "dimension", "$extensions": { "modes": { "white": "8px", "dark": "8px" } } },
+    "lg": { "$type": "dimension", "$extensions": { "modes": { "white": "16px", "dark": "16px" } } }
+  },
+  "icon": {
+    "size": {
+      "md": { "$type": "dimension", "$extensions": { "modes": { "white": "20px", "dark": "20px" } } }
+    }
+  },
+  "font": {
+    "family": {
+      "base": { "$type": "fontFamily", "$extensions": { "modes": { "white": "Inter", "dark": "Inter" } } }
+    },
+    "weight": {
+      "regular": { "$type": "fontWeight", "$extensions": { "modes": { "white": 400, "dark": 400 } } },
+      "semibold": { "$type": "fontWeight", "$extensions": { "modes": { "white": 600, "dark": 600 } } },
+      "bold": { "$type": "fontWeight", "$extensions": { "modes": { "white": 700, "dark": 700 } } }
+    },
+    "size": {
+      "label": { "$type": "dimension", "$extensions": { "modes": { "white": "14px", "dark": "14px" } } },
+      "body": { "$type": "dimension", "$extensions": { "modes": { "white": "16px", "dark": "16px" } } },
+      "title": { "$type": "dimension", "$extensions": { "modes": { "white": "24px", "dark": "24px" } } }
+    }
+  },
+  "surface": { "$type": "color", "$extensions": { "modes": { "white": "{color.neutral.0}", "dark": "{color.neutral.950}" }, "pair": "on-surface" } },
+  "on-surface": { "$type": "color", "$extensions": { "modes": { "white": "{color.neutral.900}", "dark": "{color.neutral.100}" } } },
+  "surface-variant": { "$type": "color", "$extensions": { "modes": { "white": "{color.neutral.50}", "dark": "{color.neutral.850}" }, "pair": "on-surface-variant" } },
+  "on-surface-variant": { "$type": "color", "$extensions": { "modes": { "white": "{color.neutral.900}", "dark": "{color.neutral.100}" } } },
+  "primary": { "$type": "color", "$extensions": { "modes": { "white": "{color.green.700}", "dark": "{color.green.300}" }, "pair": "on-primary" } },
+  "on-primary": { "$type": "color", "$extensions": { "modes": { "white": "{color.neutral.0}", "dark": "{color.neutral.950}" } } },
+  "error": { "$type": "color", "$extensions": { "modes": { "white": "{color.red.600}", "dark": "{color.red.300}" }, "pair": "on-error" } },
+  "on-error": { "$type": "color", "$extensions": { "modes": { "white": "{color.neutral.0}", "dark": "{color.neutral.950}" } } },
+  "team": {
+    "red": { "$type": "color", "$extensions": { "modes": { "white": "{color.red.500}", "dark": "{color.red.300}" }, "pair": "team.on-red" } },
+    "on-red": { "$type": "color", "$extensions": { "modes": { "white": "{color.neutral.0}", "dark": "{color.neutral.950}" } } },
+    "blue": { "$type": "color", "$extensions": { "modes": { "white": "{color.blue.700}", "dark": "{color.blue.300}" }, "pair": "team.on-blue" } },
+    "on-blue": { "$type": "color", "$extensions": { "modes": { "white": "{color.neutral.0}", "dark": "{color.neutral.950}" } } }
+  },
+  "radar": {
+    "grid": { "$type": "color", "$extensions": { "modes": { "white": "{color.blue.500}", "dark": "{color.blue.500}" } } },
+    "red": { "$type": "color", "$extensions": { "modes": { "white": "{color.red.500}", "dark": "{color.red.500}" } } },
+    "blue": { "$type": "color", "$extensions": { "modes": { "white": "{color.blue.500}", "dark": "{color.blue.500}" } } }
+  },
+  "pitch": { "$type": "color", "$description": "Decorative pitch green, never behind text.", "$extensions": { "modes": { "white": "{color.green.500}", "dark": "{color.green.500}" } } },
+  "page": {
+    "background": { "$type": "color", "$extensions": { "modes": { "white": "{surface}", "dark": "{surface}" }, "pair": "page.text" } },
+    "text": { "$type": "color", "$extensions": { "modes": { "white": "{on-surface}", "dark": "{on-surface}" } } },
+    "padding": { "$type": "dimension", "$extensions": { "modes": { "white": "{space.4}", "dark": "{space.4}" } } },
+    "font": { "$type": "fontFamily", "$extensions": { "modes": { "white": "{font.family.base}", "dark": "{font.family.base}" } } },
+    "size": { "$type": "dimension", "$extensions": { "modes": { "white": "{font.size.body}", "dark": "{font.size.body}" } } }
+  },
+  "nav": {
+    "background": { "$type": "color", "$extensions": { "modes": { "white": "{surface-variant}", "dark": "{surface-variant}" }, "pair": "nav.item.label.color" } },
+    "gap": { "$type": "dimension", "$extensions": { "modes": { "white": "{space.2}", "dark": "{space.2}" } } },
+    "padding-block": { "$type": "dimension", "$extensions": { "modes": { "white": "{space.2}", "dark": "{space.2}" } } },
+    "icon": {
+      "size": { "$type": "dimension", "$extensions": { "modes": { "white": "{icon.size.md}", "dark": "{icon.size.md}" } } }
+    },
+    "item": {
+      "label": {
+        "color": { "$type": "color", "$extensions": { "modes": { "white": "{on-surface-variant}", "dark": "{on-surface-variant}" } } },
+        "size": { "$type": "dimension", "$extensions": { "modes": { "white": "{font.size.label}", "dark": "{font.size.label}" } } },
+        "weight": { "$type": "fontWeight", "$extensions": { "modes": { "white": "{font.weight.semibold}", "dark": "{font.weight.semibold}" } } }
+      },
+      "padding": { "$type": "dimension", "$extensions": { "modes": { "white": "{space.3}", "dark": "{space.3}" } } },
+      "padding-block": { "$type": "dimension", "$extensions": { "modes": { "white": "{space.2}", "dark": "{space.2}" } } },
+      "radius": { "$type": "dimension", "$extensions": { "modes": { "white": "{radius.md}", "dark": "{radius.md}" } } },
+      "active": {
+        "background": { "$type": "color", "$extensions": { "modes": { "white": "{primary}", "dark": "{primary}" }, "pair": "nav.item.active.label.color" } },
+        "label": {
+          "color": { "$type": "color", "$extensions": { "modes": { "white": "{on-primary}", "dark": "{on-primary}" } } }
+        }
+      }
+    }
+  },
+  "coming-soon": {
+    "title": {
+      "color": { "$type": "color", "$extensions": { "modes": { "white": "{on-surface}", "dark": "{on-surface}" } } },
+      "size": { "$type": "dimension", "$extensions": { "modes": { "white": "{font.size.title}", "dark": "{font.size.title}" } } },
+      "weight": { "$type": "fontWeight", "$extensions": { "modes": { "white": "{font.weight.bold}", "dark": "{font.weight.bold}" } } }
+    },
+    "text": {
+      "color": { "$type": "color", "$extensions": { "modes": { "white": "{on-surface}", "dark": "{on-surface}" } } }
+    },
+    "gap": { "$type": "dimension", "$extensions": { "modes": { "white": "{space.3}", "dark": "{space.3}" } } },
+    "padding-block": { "$type": "dimension", "$extensions": { "modes": { "white": "{space.6}", "dark": "{space.6}" } } }
+  },
+  "message": {
+    "text": {
+      "color": { "$type": "color", "$extensions": { "modes": { "white": "{on-surface}", "dark": "{on-surface}" } } }
+    },
+    "error": {
+      "text": {
+        "color": { "$type": "color", "$extensions": { "modes": { "white": "{error}", "dark": "{error}" } } }
+      }
+    },
+    "gap": { "$type": "dimension", "$extensions": { "modes": { "white": "{space.3}", "dark": "{space.3}" } } },
+    "padding-block": { "$type": "dimension", "$extensions": { "modes": { "white": "{space.6}", "dark": "{space.6}" } } }
+  },
+  "button": {
+    "background": { "$type": "color", "$extensions": { "modes": { "white": "{primary}", "dark": "{primary}" }, "pair": "button.label.color" } },
+    "label": {
+      "color": { "$type": "color", "$extensions": { "modes": { "white": "{on-primary}", "dark": "{on-primary}" } } },
+      "weight": { "$type": "fontWeight", "$extensions": { "modes": { "white": "{font.weight.semibold}", "dark": "{font.weight.semibold}" } } }
+    },
+    "padding": { "$type": "dimension", "$extensions": { "modes": { "white": "{space.3}", "dark": "{space.3}" } } },
+    "padding-inline": { "$type": "dimension", "$extensions": { "modes": { "white": "{space.5}", "dark": "{space.5}" } } },
+    "radius": { "$type": "dimension", "$extensions": { "modes": { "white": "{radius.md}", "dark": "{radius.md}" } } }
+  },
+  "connection-gate": {
+    "min-height": { "$type": "dimension", "$extensions": { "modes": { "white": "{space.6}", "dark": "{space.6}" } } }
+  }
+}

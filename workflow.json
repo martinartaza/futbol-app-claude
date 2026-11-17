@@ -1,5 +1,199 @@
 {
   "projects": {
+    "android": {
+      "path": "android",
+      "label": "android",
+      "section": "Android",
+      "requires": "local.properties",
+      "source": [
+        "app/src/main/**/*.kt",
+        "app/src/main/**/*.xml",
+        "detekt-rules/src/main/**/*.kt",
+        "*.gradle.kts",
+        "app/*.gradle.kts",
+        "detekt-rules/*.gradle.kts",
+        "gradle/libs.versions.toml",
+        "config/detekt/*.yml",
+        "tools/*.sh"
+      ],
+      "tests": ["app/src/test/**/*.kt", "detekt-rules/src/test/**/*.kt"],
+      "runnable_tests": ["*Test.kt"],
+      "test_command": ["./tools/run-tests.sh"],
+      "no_tests_exit_codes": [5],
+      "checks": [
+        { "name": "detekt", "command": ["./gradlew", "--quiet", "detekt"] },
+        { "name": "android-lint", "command": ["./gradlew", "--quiet", ":app:lintDebug"] }
+      ],
+      "reuse_guard": {
+        "globs": [
+          "app/src/main/java/**/ui/**/*.kt",
+          "app/src/main/java/**/features/**/components/**/*.kt"
+        ],
+        "hint": "Reuse, extend with a parameter or compose an existing composable (skill reuse-components); keep the name it has in web and iOS."
+      },
+      "generated": [
+        {
+          "glob": "app/src/main/graphql/schema.graphql",
+          "generator": "sync_contracts",
+          "how": "Export the backend schema, then run `python3 scripts/sync_contracts.py` from the workspace root (requirement 0003).",
+          "edit": "deny"
+        },
+        {
+          "glob": "app/src/main/java/com/sebastianartaza/fulbito/ui/theme/generated/*",
+          "generator": "sync_contracts",
+          "how": "Change design-tokens/base.json and run `python3 scripts/sync_contracts.py` from the workspace root (requirement 0003).",
+          "edit": "deny"
+        },
+        {
+          "glob": "gradle/wrapper/*",
+          "generator": "gradle wrapper",
+          "how": "Change the Gradle version with `./gradlew wrapper --gradle-version <version>` from android/.",
+          "edit": "deny"
+        }
+      ]
+    },
+    "ios": {
+      "path": "ios",
+      "label": "ios",
+      "section": "iOS",
+      "requires": "Packages/.build",
+      "source": [
+        "App/**/*.swift",
+        "Packages/**/*.swift",
+        "Packages/**/*.graphql",
+        "LintRules/Sources/**/*.swift",
+        "LintRules/Package.swift",
+        "project.yml",
+        "Config/*.xcconfig",
+        ".swiftlint.yml",
+        "Packages/apollo-codegen-config.json",
+        "tools/*.sh"
+      ],
+      "tests": ["Packages/Tests/**/*.swift", "LintRules/Tests/**/*.swift", "UITests/**/*.swift"],
+      "runnable_tests": ["*Tests.swift"],
+      "test_command": ["./tools/run-tests.sh"],
+      "no_tests_exit_codes": [5],
+      "checks": [
+        { "name": "swiftlint", "command": ["swiftlint", "lint", "--strict", "--quiet"] },
+        {
+          "name": "lint-rules",
+          "command": ["swift", "run", "--quiet", "--package-path", "LintRules", "lint-rules", "App", "Packages"]
+        }
+      ],
+      "on_edit": [
+        {
+          "extensions": [".swift"],
+          "fix": [["swiftlint", "--fix", "--quiet", "{file}"]],
+          "check": [["swiftlint", "lint", "--strict", "--quiet", "{file}"]]
+        }
+      ],
+      "reuse_guard": {
+        "globs": ["Packages/UI/**/*.swift", "Packages/Features*/**/Components/**/*.swift"],
+        "hint": "Reuse, extend with a parameter or compose an existing view (skill reuse-components); keep the name it has in Android and web."
+      },
+      "generated": [
+        {
+          "glob": "graphql/schema.graphql",
+          "generator": "sync_contracts",
+          "how": "Export the backend schema, then run `python3 scripts/sync_contracts.py` from the workspace root (requirement 0003).",
+          "edit": "deny"
+        },
+        {
+          "glob": "Packages/UI/Theme/Generated/*",
+          "generator": "sync_contracts",
+          "how": "Change design-tokens/base.json and run `python3 scripts/sync_contracts.py` from the workspace root (requirement 0003).",
+          "edit": "deny"
+        },
+        {
+          "glob": "Packages/API/Generated/**",
+          "generator": "apollo-ios-cli",
+          "how": "Run `./apollo-ios-cli generate` from ios/Packages/ after changing an operation or the schema (install it once with `swift package --allow-writing-to-package-directory --allow-network-connections all apollo-cli-install`).",
+          "edit": "deny"
+        },
+        {
+          "glob": "Packages/Package.resolved",
+          "generator": "swift package",
+          "how": "Change dependencies in Packages/Package.swift and run `swift package resolve` from ios/Packages/.",
+          "edit": "deny"
+        },
+        {
+          "glob": "LintRules/Package.resolved",
+          "generator": "swift package",
+          "how": "Change dependencies in LintRules/Package.swift and run `swift package resolve` from ios/LintRules/.",
+          "edit": "deny"
+        }
+      ]
+    },
+    "web": {
+      "path": "web",
+      "label": "web",
+      "section": "Web",
+      "requires": "node_modules",
+      "source": [
+        "src/**/*.ts",
+        "src/**/*.tsx",
+        "src/**/*.css",
+        "tools/*.mjs",
+        "*.config.ts",
+        "*.config.mjs",
+        "codegen.ts",
+        "package.json"
+      ],
+      "tests": ["tests/**/*.ts", "tests/**/*.tsx", "e2e/**/*.ts"],
+      "runnable_tests": ["*.test.ts", "*.test.tsx", "*.spec.ts"],
+      "test_command": ["pnpm", "--silent", "test"],
+      "no_tests_exit_codes": [5],
+      "checks": [
+        { "name": "eslint", "command": ["pnpm", "--silent", "lint"] },
+        { "name": "typescript", "command": ["pnpm", "--silent", "typecheck"] },
+        { "name": "prettier", "command": ["pnpm", "--silent", "format:check"] }
+      ],
+      "on_edit": [
+        {
+          "extensions": [".ts", ".tsx", ".mjs", ".css", ".json"],
+          "fix": [["pnpm", "exec", "prettier", "--write", "--log-level", "warn", "{file}"]],
+          "check": [["pnpm", "exec", "eslint", "--no-warn-ignored", "{file}"]]
+        },
+        {
+          "extensions": [".css"],
+          "check": [["pnpm", "exec", "stylelint", "--allow-empty-input", "{file}"]]
+        }
+      ],
+      "reuse_guard": {
+        "globs": [
+          "src/ui/**/*.tsx",
+          "src/features/**/components/**/*.tsx",
+          "src/backoffice/ui/**/*.tsx"
+        ],
+        "hint": "Reuse, extend with a prop or compose an existing component (skill reuse-components); keep the name it has in Android and iOS."
+      },
+      "generated": [
+        {
+          "glob": "src/generated/tokens.*",
+          "generator": "sync_contracts",
+          "how": "Change design-tokens/base.json and run `python3 scripts/sync_contracts.py` from the workspace root (requirement 0003).",
+          "edit": "deny"
+        },
+        {
+          "glob": "src/generated/schema.graphql",
+          "generator": "sync_contracts",
+          "how": "Export the backend schema, then run `python3 scripts/sync_contracts.py` from the workspace root (requirement 0003).",
+          "edit": "deny"
+        },
+        {
+          "glob": "src/generated/graphql/*",
+          "generator": "graphql-codegen",
+          "how": "Run `pnpm codegen` from web/ after changing an operation or the schema.",
+          "edit": "deny"
+        },
+        {
+          "glob": "pnpm-lock.yaml",
+          "generator": "pnpm",
+          "how": "Change dependencies with `pnpm add <package>` or `pnpm remove <package>` from web/; pnpm rewrites the lock file.",
+          "edit": "deny"
+        }
+      ]
+    },
     "backend": {
       "path": "backend",
       "label": "backend",
@@ -64,7 +258,8 @@
         {
           "name": "ruff",
           "command": ["uvx", "ruff==0.17.5", "check", "scripts", ".claude/hooks", "tests"]
-        }
+        },
+        {"name": "contracts", "command": ["python3", "scripts/sync_contracts.py", "--check"]}
       ],
       "on_edit": [
         {

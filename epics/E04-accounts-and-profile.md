@@ -40,6 +40,11 @@ login, so this one is built first and right.
 
 - Can the user edit their name and photo, or only see them, in this epic?
 - What the account deletion screen asks and confirms.
+- Query cost limit: ADR 0003 section 6 limits depth and cost; the depth limit exists
+  since E01, the cost limit arrives with the first real queries. From the E01 review
+  (0007 F-14).
+- Navigation to sign-in on Android and iOS: the screen exists in both, only web has a
+  route to it (`/sign-in`). From the E01 review (0007 F-15).
 
 ## Impact on the architecture
 

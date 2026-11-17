@@ -79,6 +79,11 @@ flowchart TD
    rollback on error). Services and repositories never commit; a repository may `flush`
    when it needs generated ids. Any exception (a failure log that must survive a
    rollback, work outside a request) needs the user's approval and a line here.
+   Approved exceptions:
+   - The event worker (`app/events/adapters/postgres.py`, requirement 0002): one
+     transaction per relay batch and one per delivery (the consumer's work, the
+     processed mark and `done` together); a failed attempt is recorded in a second
+     transaction after the rollback.
 
 Rules 1 to 7 are import-linter contracts in `backend/pyproject.toml`
 (`[tool.importlinter]`), run by the Stop hook. A broken contract means the code is in the
@@ -159,8 +164,8 @@ lines, add two lines".
   consumer. Event types live in the producing module's `schemas.py`: plain JSON (`id`,
   `type`, `version`, `aggregate_key`, `occurred_at`, ids and values), never ORM objects.
 - A consumer lives in the consuming module, declares its name and event types, is
-  idempotent (records processed event ids), relies on order only within one
-  `aggregate_key`, and never shares the producer's transaction.
+  idempotent (records processed event ids), never relies on delivery order (it compares
+  the aggregate's version when it cares), and never shares the producer's transaction.
 - Consumers run in the worker (`python -m app.events.worker`), not in API requests.
 - The notification inbox is the source of truth; subscriptions and push only signal.
 - Subscriptions carry small signals; clients refetch through queries.

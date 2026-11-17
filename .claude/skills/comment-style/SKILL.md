@@ -84,5 +84,5 @@ must have it. Tests and config files are exempt.
   workflow kit's `extras/eslint/`), declared in the web project's `on_edit` check.
 - Kotlin (`android/`): a custom detekt rule, written with the Android skeleton
   (ADR 0004), declared in the android project's `on_edit` check.
-- Swift (`ios/`): a SwiftLint custom rule, written with the iOS skeleton (ADR 0004),
-  declared in the ios project's `on_edit` check.
+- Swift (`ios/`): the rule `no-function-body-comments` of `ios/LintRules` (SwiftSyntax),
+  written with the iOS skeleton (ADR 0004), run by the ios project's `lint-rules` check.

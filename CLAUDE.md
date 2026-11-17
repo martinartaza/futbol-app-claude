@@ -132,7 +132,7 @@ The app keeps the identity of the existing Play Store listing, so no new app (an
 - the **upload key** (keystore in `secrets/`, git-ignored);
 - every release has a `versionCode` above the last published one (last published: `7`, versionName `1.0.1`; versionCode 6 was named `1.0.2`, so the
   new app starts at versionName `1.1.0` or above);
-- iOS bundle id, if published: `<value>`.
+- iOS bundle id: `com.sebastianartaza.fulbito` (the same as the Android package).
 
 Never write passwords or key material in tracked files, logs, tests or the transcript.
 

@@ -155,7 +155,7 @@ product's name.
   fixture where one module imports another module's repository.
 - [x] AC-9: `docker compose up` starts `db` and `backend`; the backend answers
   `/health` through Traefik at `BACKEND_HOST` over HTTPS. (Manual check.)
-- [ ] AC-10: the backend repository's `checks.yml` runs ruff, mypy, import-linter and
+- [x] AC-10: the backend repository's `checks.yml` runs ruff, mypy, import-linter and
   the schema checks on push, and `tests.yml` runs the full suite when dispatched by
   hand. (Checked on the first push.)
 
@@ -168,7 +168,7 @@ product's name.
 
 - [x] Backend
 - [x] Migration generated with autogenerate and applied
-- [ ] Tests for every acceptance criterion (one new test file): not in this ticket, see Implementation notes
+- [x] Tests for every acceptance criterion: `backend/tests/test_backend_skeleton.py`, written in 0007 (finding F-1)
 - [x] Lint and types green
 - [x] `docs/agent/codebase-map.md` and `docs/agent/bug-reproduction.md` backend parts
 
